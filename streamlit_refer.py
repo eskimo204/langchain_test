@@ -45,10 +45,6 @@ def main():
         st.session_state.processComplete = True
         st.session_state.text_chunks = text_chunks
 
-        st.write("### 텍스트 청크 출력")
-        for chunk in text_chunks:
-            st.text(chunk.page_content)
-
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant", "content": "안녕하세요! 주어진 문서에 대해 궁금하신 것이 있으면 언제든 물어봐주세요!"}]
 
@@ -57,6 +53,11 @@ def main():
             st.markdown(message["content"])
 
     history = StreamlitChatMessageHistory(key="chat_messages")
+
+    if st.session_state.text_chunks:
+        st.write("### 텍스트 청크 출력")
+        for chunk in st.session_state.text_chunks:
+            st.text(chunk.page_content)
 
     if query := st.chat_input("질문을 입력해주세요."):
         st.session_state.messages.append({"role": "user", "content": query})
