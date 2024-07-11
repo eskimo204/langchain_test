@@ -45,6 +45,7 @@ def main():
         st.session_state.processComplete = True
         st.session_state.text_chunks = text_chunks
 
+        st.write("### 텍스트 청크 출력")
         for chunk in text_chunks:
             st.text(chunk.page_content)
 
