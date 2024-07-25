@@ -1,21 +1,41 @@
-# 기존 라이브러리
+# Database and SQL
 pysqlite3-binary
+
+# LangChain and related libraries
 langchain
 langchain_community
 chromadb
 unstructured
+
+# Sentence Transformers for embeddings
 sentence-transformers
+
+# FAISS for vector search
 faiss-cpu
+
+# Tokenization
 tiktoken
+
+# OpenAI API
 openai
+
+# PDF and document processing
 pypdf
-loguru
+unstructured[all-docs]
 docx2txt
 
-# 추가된 라이브러리
-streamlit  # Streamlit 애플리케이션을 실행하기 위해 필요
-Pillow  # 이미지 처리 라이브러리
-pytesseract  # 이미지에서 텍스트 추출을 위한 OCR 라이브러리
-poppler-utils  # PDF에서 이미지 추출을 위한 라이브러리
-huggingface-hub  # HuggingFace 모델 사용을 위한 라이브러리
-pdf2image  # PDF를 이미지로 변환하는 라이브러리
+# Logging
+loguru
+
+# Additional dependencies
+streamlit
+pillow
+numpy
+scipy
+scikit-learn
+matplotlib
+tqdm
+
+# PyTesseract for OCR
+pytesseract
+poppler-utils
