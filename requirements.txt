@@ -19,3 +19,4 @@ pytesseract  # 이미지에서 텍스트 추출을 위한 OCR 라이브러리
 poppler-utils  # PDF에서 이미지 추출을 위한 라이브러리
 huggingface-hub  # HuggingFace 모델 사용을 위한 라이브러리
 pdf2image  # PDF를 이미지로 변환하는 라이브러리
+opencv
