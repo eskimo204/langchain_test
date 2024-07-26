@@ -43,4 +43,4 @@ poppler-utils
 
 # Error
 pdfminer.six
-partition_pdf
+unstructured.partition.pdf
