@@ -39,3 +39,6 @@ tqdm
 # PyTesseract for OCR
 pytesseract
 poppler-utils
+
+# error
+pdfminer.six
