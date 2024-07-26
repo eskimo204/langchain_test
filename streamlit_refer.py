@@ -9,7 +9,7 @@ from langchain.document_loaders import PyPDFLoader, Docx2txtLoader, Unstructured
 from langchain_core.documents import Document
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.chat_models import ChatOpenAI
+from langchain.llms import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
