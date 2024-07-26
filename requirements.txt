@@ -43,14 +43,3 @@ poppler-utils
 
 # Error
 pdfminer.six
-
-# LangChain Submodules (if required)
-langchain.vectorstores  # Added based on the import statements
-langchain.embeddings  # Added based on the import statements
-langchain.chat_models  # Added based on the import statements
-langchain.chains  # Added based on the import statements
-langchain.memory  # Added based on the import statements
-langchain.callbacks  # Added based on the import statements
-langchain.document_loaders  # Added based on the import statements
-langchain.retrievers  # Added based on the import statements
-langchain.storage  # Added based on the import statements
