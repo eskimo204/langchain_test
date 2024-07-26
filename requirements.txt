@@ -42,14 +42,3 @@ poppler-utils
 
 # error
 pdfminer.six
-
-# Added
-langchain.vectorstores  # Added
-langchain.embeddings  # Added
-langchain.chat_models  # Added
-langchain.chains  # Added
-langchain.memory  # Added
-langchain.callbacks  # Added
-langchain.document_loaders  # Added
-langchain.retrievers  # Added
-langchain.storage  # Added
