@@ -9,8 +9,7 @@ from langchain.document_loaders import PyPDFLoader, Docx2txtLoader, Unstructured
 from langchain_core.documents import Document
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
-# from langchain.llms import ChatOpenAI
-from langchain.chat_models import ChatOpenAI 
+from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain_core.runnables import RunnableLambda, RunnablePassthrough
@@ -23,6 +22,7 @@ from unstructured.partition.pdf import partition_pdf
 from unstructured.documents.elements import Image as ImageElement
 from langchain.callbacks import get_openai_callback
 from langchain.memory.chat_message_history import StreamlitChatMessageHistory
+from pdfminer.high_level import extract_text
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
