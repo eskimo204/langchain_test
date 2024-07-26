@@ -18,8 +18,8 @@ import base64
 import io
 import uuid
 from typing import List, Dict
-# from unstructured.partition.pdf import partition_pdf
-from unstructured.partition.pdf_image.pdf import partition_pdf
+from unstructured.partition.pdf import partition_pdf
+# from unstructured.partition.pdf_image.pdf import partition_pdf
 from unstructured.documents.elements import Image as ImageElement
 from langchain.callbacks import get_openai_callback
 from langchain.memory.chat_message_history import StreamlitChatMessageHistory
