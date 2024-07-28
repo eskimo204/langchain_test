@@ -8,7 +8,8 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
-from langchain.output_parsers import StrOutputParser
+# from langchain.output_parsers import StrOutputParser
+from langchain_core.output_parsers import StrOutputParser
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import ChatPromptTemplate
 from langchain.retrievers.multi_vector import MultiVectorRetriever
