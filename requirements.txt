@@ -1,45 +1,17 @@
-# Database and SQL
+streamlit
 pysqlite3-binary
-
-# LangChain and related libraries
 langchain
 langchain_community
 chromadb
-unstructured==0.11.2
-langchain-experimental  # Added based on the provided install command
-
-# Sentence Transformers for embeddings
+unstructured
 sentence-transformers
-
-# FAISS for vector search
 faiss-cpu
-
-# Tokenization
 tiktoken
-
-# OpenAI API
 openai
-
-# PDF and document processing
 pypdf
-unstructured[all-docs]
-docx2txt
-
-# Logging
 loguru
-
-# Additional dependencies
-streamlit
-pillow
-numpy
-scipy
-scikit-learn
-matplotlib
-tqdm
-
-# PyTesseract for OCR
+docx2txt
+fitz  # PyMuPDF의 공식 이름
 pytesseract
-poppler-utils
-
-# Error
-pdfminer.six
+Pillow  # 이미지 처리 라이브러리
+pdfminer.six  # PDF 텍스트 추출
