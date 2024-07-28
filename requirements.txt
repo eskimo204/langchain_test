@@ -15,3 +15,4 @@ fitz  # PyMuPDF의 공식 이름
 pytesseract
 Pillow  # 이미지 처리 라이브러리
 pdfminer.six  # PDF 텍스트 추출
+uuid
