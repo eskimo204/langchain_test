@@ -1,3 +1,4 @@
+# 기존 라이브러리
 pysqlite3-binary
 langchain
 langchain_community
@@ -10,8 +11,7 @@ openai
 pypdf
 loguru
 docx2txt
-streamlit
-Pillow
+
+# 추가 라이브러리
 pytesseract
-poppler-utils
-pdfminer
+pillow
