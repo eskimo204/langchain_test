@@ -1,25 +1,33 @@
 # Database and SQL
 pysqlite3-binary
+
 # LangChain and related libraries
 langchain
 langchain_community
 chromadb
-unstructured==0.11.2
+unstructured
 langchain-experimental  # Added based on the provided install command
+
 # Sentence Transformers for embeddings
 sentence-transformers
+
 # FAISS for vector search
 faiss-cpu
+
 # Tokenization
 tiktoken
+
 # OpenAI API
 openai
+
 # PDF and document processing
 pypdf
 unstructured[all-docs]
 docx2txt
+
 # Logging
 loguru
+
 # Additional dependencies
 streamlit
 pillow
@@ -28,6 +36,7 @@ scipy
 scikit-learn
 matplotlib
 tqdm
+
 # PyTesseract for OCR
 pytesseract
 poppler-utils
