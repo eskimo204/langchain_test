@@ -4,7 +4,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_community.vectorstores import Chroma
 from langchain.retrievers.multi_vector import MultiVectorRetriever
-from langchain.storage import InMemoryStore
+# from langchain.storage import InMemoryStore
+from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import PyPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
 from langchain_core.documents import Document
 from langchain.vectorstores import FAISS
