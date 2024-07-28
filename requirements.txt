@@ -1,19 +1,23 @@
-# 기존 라이브러리
+# Database and SQL
 pysqlite3-binary
+# LangChain and related libraries
 langchain
 langchain_community
 chromadb
-unstructured == 0.11.2
+unstructured==0.11.2
+langchain-experimental  # Added based on the provided install command
+
+# Sentence Transformers for embeddings
 sentence-transformers
+# FAISS for vector search
 faiss-cpu
+# Tokenization
 tiktoken
+# OpenAI API
 openai
+# PDF and document processing
 pypdf
-loguru
+unstructured[all-docs]
 docx2txt
-
-# 추가 라이브러리
-pytesseract
-pillow
-PyPDF2
-
+# Logging
+loguru
