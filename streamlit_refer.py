@@ -1,189 +1,150 @@
+import os
 import streamlit as st
-import logging
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_community.vectorstores import Chroma
-from langchain.retrievers.multi_vector import MultiVectorRetriever
-from langchain.storage import InMemoryStore
-from langchain.document_loaders import PyPDFLoader, Docx2txtLoader, UnstructuredPowerPointLoader
-from langchain_core.documents import Document
-from langchain.vectorstores import FAISS
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.chat_models import ChatOpenAI
+from PIL import Image
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores.faiss import FAISS
+from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
-from langchain_core.runnables import RunnableLambda, RunnablePassthrough
-from PIL import Image
+from langchain.llms import OpenAI
+from langchain.prompts import PromptTemplate
+from langchain.output_parsers import StrOutputParser
+from langchain.chains.question_answering import load_qa_chain
+from langchain.prompts import ChatPromptTemplate
+from langchain.retrievers.multi_vector import MultiVectorRetriever
+from langchain.storage import InMemoryStore
+from langchain_core.documents import Document
+from langchain_core.messages import HumanMessage
 import base64
+import pytesseract
 import io
+import re
 import uuid
-from typing import List, Dict
-# from unstructured.partition.pdf import partition_pdf
-from unstructured.partition.pdf_image.pdf import partition_pdf
-from unstructured.documents.elements import Image as ImageElement
-from langchain.callbacks import get_openai_callback
-from langchain.memory.chat_message_history import StreamlitChatMessageHistory
-from pdfminer.high_level import extract_text
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+st.set_page_config(page_title="Chat with Multiple PDFs", page_icon="📄")
 
-# Updated get_text function
-def get_text(docs):
-    doc_list = []
-    images = []
+def extract_pdf_elements(file, extract_images_in_pdf=True):
+    import fitz  # PyMuPDF
+    from pdfminer.high_level import extract_text
 
-    for doc in docs:
-        file_name = doc.name
-        with open(file_name, "wb") as file:
-            file.write(doc.getvalue())
-            logger.info(f"Uploaded {file_name}")
+    doc = fitz.open(stream=file.read(), filetype="pdf")
+    extracted_text = extract_text(io.BytesIO(file.getvalue()))
+    extracted_images = []
 
-        if '.pdf' in doc.name:
-            loader = PyPDFLoader(file_name)
-        elif '.docx' in doc.name:
-            loader = Docx2txtLoader(file_name)
-        elif '.pptx' in doc.name:
-            loader = UnstructuredPowerPointLoader(file_name)
-        documents = loader.load_and_split()
-        
-        # Extract images
-        elements = partition_pdf(file_name, extract_images_in_pdf=True)
-        for element in elements:
-            if isinstance(element, ImageElement):
-                images.append(element)
-            else:
-                doc_list.append(element)
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        image_list = page.get_images(full=True)
+        for img_index, img in enumerate(image_list):
+            xref = img[0]
+            base_image = doc.extract_image(xref)
+            image_bytes = base_image["image"]
+            image = Image.open(io.BytesIO(image_bytes))
+            image_path = f"page_{page_num + 1}_image_{img_index + 1}.png"
+            image.save(image_path)
+            extracted_images.append(image_path)
 
-    return doc_list, images
+    return extracted_text, extracted_images
 
-# Encode images to base64
 def encode_image(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode("utf-8")
 
-# Updated get_vectorstore function
-def get_vectorstore(text_chunks, image_paths):
-    embeddings = HuggingFaceEmbeddings(
-        model_name="jhgan/ko-sroberta-multitask",
-        model_kwargs={'device': 'cpu'},
-        encode_kwargs={'normalize_embeddings': True}
-    )
-    vectordb = FAISS.from_documents(text_chunks, embeddings)
+def image_summarize(img_base64, prompt):
+    chat = ChatOpenAI(model="gpt-4", max_tokens=2048)
+    msg = chat.invoke([
+        HumanMessage(content=[
+            {"type": "text", "text": prompt},
+            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}},
+        ])
+    ])
+    return msg.content
 
-    img_base64_list = [encode_image(img) for img in image_paths]
-    image_embeddings = [embeddings.embed_document(base64.b64decode(img)) for img in img_base64_list]
+def generate_img_summaries(path):
+    prompt = """You are an assistant tasked with summarizing images for retrieval. \
+    These summaries will be embedded and used to retrieve the raw image. \
+    Give a concise summary of the image that is well optimized for retrieval."""
+    img_base64_list = []
+    image_summaries = []
 
+    for img_file in sorted(os.listdir(path)):
+        if img_file.endswith(".png") or img_file.endswith(".jpg"):
+            img_path = os.path.join(path, img_file)
+            base64_image = encode_image(img_path)
+            img_base64_list.append(base64_image)
+            image_summaries.append(image_summarize(base64_image, prompt))
+
+    return img_base64_list, image_summaries
+
+def create_multi_vector_retriever(
+    vectorstore, text_summaries, texts, table_summaries, tables, image_summaries, images
+):
     store = InMemoryStore()
-    vectorstore = Chroma(collection_name="sample-rag-multi-modal", embedding_function=embeddings)
-    retriever = MultiVectorRetriever(vectorstore=vectorstore, docstore=store, id_key="doc_id")
-    
-    # Helper function to add documents to vectorstore and docstore
+    id_key = "doc_id"
+    retriever = MultiVectorRetriever(
+        vectorstore=vectorstore,
+        docstore=store,
+        id_key=id_key,
+    )
+
     def add_documents(retriever, doc_summaries, doc_contents):
         doc_ids = [str(uuid.uuid4()) for _ in doc_contents]
-        summary_docs = [Document(page_content=s, metadata={"doc_id": doc_ids[i]}) for i, s in enumerate(doc_summaries)]
+        summary_docs = [
+            Document(page_content=s, metadata={id_key: doc_ids[i]})
+            for i, s in enumerate(doc_summaries)
+        ]
         retriever.vectorstore.add_documents(summary_docs)
         retriever.docstore.mset(list(zip(doc_ids, doc_contents)))
 
-    if text_chunks:
-        add_documents(retriever, [chunk.page_content for chunk in text_chunks], text_chunks)
-    
-    if img_base64_list:
-        add_documents(retriever, img_base64_list, image_embeddings)
+    if text_summaries:
+        add_documents(retriever, text_summaries, texts)
+    if table_summaries:
+        add_documents(retriever, table_summaries, tables)
+    if image_summaries:
+        add_documents(retriever, image_summaries, images)
 
     return retriever
 
-# Updated get_conversation_chain function
-def get_conversation_chain(retriever, openai_api_key):
-    llm = ChatOpenAI(openai_api_key=openai_api_key, model_name='gpt-3.5-turbo', temperature=0)
-    conversation_chain = ConversationalRetrievalChain.from_llm(
-        llm=llm,
-        chain_type="stuff",
-        retriever=retriever,
-        memory=ConversationBufferMemory(memory_key='chat_history', return_messages=True, output_key='answer'),
-        get_chat_history=lambda h: h,
-        return_source_documents=True,
-        verbose=True
-    )
-    return conversation_chain
+st.title("Chat with your PDFs")
+st.sidebar.header("Upload your files")
+uploaded_files = st.sidebar.file_uploader("Upload PDF or DOCX files", type=["pdf", "docx"], accept_multiple_files=True)
+api_key = st.sidebar.text_input("OpenAI API Key", type="password")
 
-# Display images in the chat
-def display_images(images):
-    for img_base64 in images:
-        st.image(base64.b64decode(img_base64))
+if api_key:
+    os.environ["OPENAI_API_KEY"] = api_key
 
-# Main function updated to handle images
-def main():
-    st.set_page_config(page_title="DirChat", page_icon=":books:")
-    st.title("_Private Data :red[QA Chat]_ :books:")
+    if uploaded_files:
+        all_texts = []
+        all_images = []
+        for uploaded_file in uploaded_files:
+            if uploaded_file.name.endswith(".pdf"):
+                extracted_text, extracted_images = extract_pdf_elements(uploaded_file)
+                all_texts.append(extracted_text)
+                all_images.extend(extracted_images)
 
-    if "conversation" not in st.session_state:
-        st.session_state.conversation = None
+        text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+        texts_4k_token = text_splitter.split_text(" ".join(all_texts))
 
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = None
+        vectorstore = FAISS.from_texts(texts_4k_token, OpenAIEmbeddings())
+        retriever = create_multi_vector_retriever(
+            vectorstore,
+            texts_4k_token,
+            all_texts,
+            [],
+            [],
+            [],
+            all_images
+        )
 
-    if "processComplete" not in st.session_state:
-        st.session_state.processComplete = None
+        memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
+        qa_chain = ConversationalRetrievalChain(
+            retriever=retriever,
+            memory=memory,
+            llm=OpenAI(model="gpt-3.5-turbo")
+        )
 
-    if "text_chunks" not in st.session_state:
-        st.session_state.text_chunks = None
-
-    with st.sidebar:
-        uploaded_files = st.file_uploader("Upload your file", type=['pdf', 'docx'], accept_multiple_files=True)
-        openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
-        process = st.button("Process")
-
-    if process:
-        if not openai_api_key:
-            st.info("Please add your OpenAI API key to continue.")
-            st.stop()
-
-        files_text, images = get_text(uploaded_files)
-        text_chunks = [Document(page_content=str(doc)) for doc in files_text]
-        retriever = get_vectorstore(text_chunks, [img.uri for img in images])
-
-        st.session_state.conversation = get_conversation_chain(retriever, openai_api_key)
-        st.session_state.processComplete = True
-        st.session_state.text_chunks = text_chunks
-
-    if 'messages' not in st.session_state:
-        st.session_state['messages'] = [{"role": "assistant", "content": "안녕하세요! 주어진 문서에 대해 궁금하신 것이 있으면 언제든 물어봐주세요!"}]
-
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    history = StreamlitChatMessageHistory(key="chat_messages")
-
-    if st.session_state.text_chunks:
-        st.write("### 텍스트 청크 출력")
-        for chunk in st.session_state.text_chunks:
-            st.text(chunk.page_content)
-
-    if query := st.chat_input("질문을 입력해주세요."):
-        st.session_state.messages.append({"role": "user", "content": query})
-
-        with st.chat_message("user"):
-            st.markdown(query)
-
-        with st.chat_message("assistant"):
-            chain = st.session_state.conversation
-
-            with st.spinner("Thinking..."):
-                result = chain({"question": query})
-                with get_openai_callback() as cb:
-                    st.session_state.chat_history = result['chat_history']
-                response = result['answer']
-                source_documents = result['source_documents']
-
-                st.markdown(response)
-                with st.expander("참고 문서 확인"):
-                    for doc in source_documents:
-                        st.markdown(f"**Source:** {doc.metadata['source']}")
-                        st.markdown(f"**Content:** {doc.page_content}")
-
-        st.session_state.messages.append({"role": "assistant", "content": response})
-
-if __name__ == '__main__':
-    main()
+        st.text_input("Ask something", key="user_input", on_change=lambda: qa_chain({"question": st.session_state.user_input}))
+        
+        for message in st.session_state.chat_history:
+            st.write(f"**{message['author']}**: {message['content']}")
+else:
+    st.warning("Please enter your OpenAI API key.")
