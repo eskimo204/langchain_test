@@ -1,4 +1,3 @@
-streamlit
 pysqlite3-binary
 langchain
 langchain_community
@@ -11,8 +10,7 @@ openai
 pypdf
 loguru
 docx2txt
-fitz  # PyMuPDF의 공식 이름
+streamlit
+Pillow
 pytesseract
-Pillow  # 이미지 처리 라이브러리
-pdfminer.six  # PDF 텍스트 추출
-uuid
+poppler-utils
