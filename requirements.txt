@@ -1,41 +1,17 @@
-# Database and SQL
+# 기존 라이브러리
 pysqlite3-binary
-
-# LangChain and related libraries
 langchain
 langchain_community
 chromadb
-unstructured # == 0.11.2
-langchain-experimental
-
-# Sentence Transformers for embeddings
+unstructured
 sentence-transformers
-
-# FAISS for vector search
 faiss-cpu
-
-# Tokenization
 tiktoken
-
-# OpenAI API
 openai
-
-# PDF and document processing
 pypdf
-unstructured[all-docs]
+loguru
 docx2txt
 
-# Logging
-loguru
-
-# Additional dependencies
-streamlit
-pillow
-
-scikit-learn
-matplotlib
-tqdm
-
-# PyTesseract for OCR
+# 추가 라이브러리
 pytesseract
-poppler-utils
+pillow
