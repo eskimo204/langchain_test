@@ -1,21 +1,41 @@
-
+# Database and SQL
 pysqlite3-binary
+
+# LangChain and related libraries
 langchain
 langchain_community
 chromadb
 unstructured
+langchain-experimental
+
+# Sentence Transformers for embeddings
 sentence-transformers
+
+# FAISS for vector search
 faiss-cpu
+
+# Tokenization
 tiktoken
+
+# OpenAI API
 openai
+
+# PDF and document processing
 pypdf
-loguru
+unstructured[all-docs]
 docx2txt
 
+# Logging
+loguru
 
-streamlit 
-Pillow
-pytesseract  
-poppler-utils 
-huggingface-hub
-pdf2image 
+# Additional dependencies
+streamlit
+pillow
+
+scikit-learn
+matplotlib
+tqdm
+
+# PyTesseract for OCR
+pytesseract
+poppler-utils
