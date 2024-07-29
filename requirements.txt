@@ -1,45 +1,13 @@
-# Database and SQL
 pysqlite3-binary
-
-# LangChain and related libraries
 langchain
 langchain_community
 chromadb
 unstructured
-langchain-experimental  # Added based on the provided install command
-
-# Sentence Transformers for embeddings
 sentence-transformers
-
-# FAISS for vector search
 faiss-cpu
-
-# Tokenization
 tiktoken
-
-# OpenAI API
 openai
-
-# PDF and document processing
 pypdf
-unstructured[all-docs]
+loguru
 docx2txt
 
-# Logging
-loguru
-
-# Additional dependencies
-streamlit
-pillow
-numpy
-scipy
-scikit-learn
-matplotlib
-tqdm
-
-# PyTesseract for OCR
-pytesseract
-poppler-utils
-
-# Error
-pdfminer.six
