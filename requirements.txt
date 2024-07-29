@@ -8,7 +8,7 @@ sentence-transformers
 faiss-cpu
 tiktoken
 openai
-pypdf
+#pypdf
 loguru
 docx2txt
 
