@@ -6,7 +6,8 @@ import pytesseract
 from PIL import Image
 from io import BytesIO
 import base64
-from unstructured.partition.pdf import partition_pdf
+## from unstructured.partition.pdf import partition_pdf
+from unstructured.partition.pdf_image.pdf import partition_pdf
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
 from langchain.embeddings.openai import OpenAIEmbeddings
