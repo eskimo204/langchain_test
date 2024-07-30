@@ -11,3 +11,7 @@ openai
 pypdf
 loguru
 docx2txt
+
+# 추가 라이브러리
+pytesseract
+pillow
