@@ -17,4 +17,5 @@ pytesseract
 pillow
 
 #
+pdfminer
 PyPDF2
