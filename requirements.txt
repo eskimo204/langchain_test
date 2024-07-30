@@ -7,6 +7,14 @@ sentence-transformers
 faiss-cpu
 tiktoken
 openai
+
 pypdf
 loguru
 docx2txt
+
+# 추가 라이브러리
+pytesseract
+pillow
+
+#
+PyPDF2
