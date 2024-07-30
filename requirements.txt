@@ -16,3 +16,4 @@ docx2txt
 pytesseract
 pillow
 PyPDF2
+pdfminer 
