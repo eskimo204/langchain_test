@@ -3,7 +3,8 @@ pysqlite3-binary
 langchain
 langchain_community
 chromadb
-unstructured == 0.11.2
+unstructured 
+# == 0.11.2
 sentence-transformers
 faiss-cpu
 tiktoken
@@ -12,6 +13,6 @@ loguru
 docx2txt
 
 # 추가 라이브러리
-pytesseract
-pillow == 9.4.0
+# pytesseract
+# pillow == 9.4.0
 # PyPDF2
