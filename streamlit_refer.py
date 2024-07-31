@@ -24,7 +24,7 @@ def main():
     page_title="DirChat",
     page_icon=":books:")
 
-    st.title("_혈당 관련 문서 응답 챗봇_ :books:")
+    st.title("_혈당 응답 챗봇_ :books:")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
