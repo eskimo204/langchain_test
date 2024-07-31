@@ -16,3 +16,4 @@ docx2txt
 # pytesseract
 # pillow == 9.4.0
 # PyPDF2
+# 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
