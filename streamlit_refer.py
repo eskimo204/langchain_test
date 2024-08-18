@@ -57,6 +57,7 @@ def main():
                                         "content": "안녕하세요! 혈당에 대해 궁금하신 것이 있으면 언제든 물어봐주세요!"}]
 
     for message in st.session_state.messages:
+        st.write(message)
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
