@@ -59,6 +59,7 @@ def main():
     for message in st.session_state.messages:
         st.write(message)
         with st.chat_message(message["role"]):
+            st.write(message)
             st.markdown(message["content"])
 
     history = StreamlitChatMessageHistory(key="chat_messages")
