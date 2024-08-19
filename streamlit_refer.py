@@ -65,8 +65,11 @@ def main():
     history = StreamlitChatMessageHistory(key="chat_messages")
 
     # Chat logic
-    if query := st.chat_input("질문을 입력해주세요."):
+    query = st.chat_input("질문을 입력해주세요.")
+    if query:
         st.session_state.messages.append({"role": "user", "content": query})
+    #if query := st.chat_input("질문을 입력해주세요."):
+    #    st.session_state.messages.append({"role": "user", "content": query})
 
         with st.chat_message("user"):
             st.markdown(query)
