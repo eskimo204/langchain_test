@@ -83,7 +83,7 @@ def main():
 
                 st.markdown(response)
                 with st.expander("참고 문서 확인"):
-                    sfor doc in source_documents:
+                    for doc in source_documents:
                         st.markdown(f"**Source:** {doc.metadata['source']}\n\n")
                         st.markdown(f"**Content:** {doc.page_content}")
                     
