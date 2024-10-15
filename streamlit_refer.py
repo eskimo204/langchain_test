@@ -62,8 +62,7 @@ def main():
                                         print(f"Release: {platform.release()}"),
                                         print(f"Version: {platform.version()}"),
                                         print(f"Machine: {platform.machine()}"),
-                                        print(f"Processor: {platform.processor()}")
-                                        ]
+                                        print(f"Processor: {platform.processor()}")}]
 
     for message in st.session_state.messages:
         st.write(message)
