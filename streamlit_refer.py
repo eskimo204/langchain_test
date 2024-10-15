@@ -32,6 +32,7 @@ def main():
     os_version = platform.version()
     machine = platform.machine()
     processor = platform.processor()
+    python_version = platform.python_version()  # Python 버전 추가
 
     st.write("### 현재 시스템 정보")
     st.write(f"**System**: {os_info}")
@@ -40,6 +41,7 @@ def main():
     st.write(f"**Version**: {os_version}")
     st.write(f"**Machine**: {machine}")
     st.write(f"**Processor**: {processor}")
+    st.write(f"**Python Version**: {python_version}")  # Python 버전 출력
 
     st.title("_혈당 응답 챗봇_ :books:")
 
