@@ -27,14 +27,6 @@ def main():
 
     st.title("_혈당 응답 챗봇_ :books:")
 
-    # 운영 체제 정보 출력
-    print(f"System: {platform.system()}")
-    print(f"Node Name: {platform.node()}")
-    print(f"Release: {platform.release()}")
-    print(f"Version: {platform.version()}")
-    print(f"Machine: {platform.machine()}")
-    print(f"Processor: {platform.processor()}")
-
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
 
@@ -63,7 +55,15 @@ def main():
 
     if 'messages' not in st.session_state:
         st.session_state['messages'] = [{"role": "assistant", 
-                                        "content": "안녕하세요! 혈당에 대해 궁금하신 것이 있으면 언제든 물어봐주세요!"}]
+                                        "content": "안녕하세요! 혈당에 대해 궁금하신 것이 있으면 언제든 물어봐주세요!"}
+                                       # 운영 체제 정보 출력
+                                        print(f"System: {platform.system()}")
+                                        print(f"Node Name: {platform.node()}")
+                                        print(f"Release: {platform.release()}")
+                                        print(f"Version: {platform.version()}")
+                                        print(f"Machine: {platform.machine()}")
+                                        print(f"Processor: {platform.processor()}")
+                                        ]
 
     for message in st.session_state.messages:
         st.write(message)
