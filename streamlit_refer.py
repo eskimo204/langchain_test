@@ -25,6 +25,22 @@ def main():
     page_title="DirChat",
     page_icon=":books:")
 
+    # OS 세부 정보 출력
+    os_info = platform.system()
+    node_name = platform.node()
+    os_release = platform.release()
+    os_version = platform.version()
+    machine = platform.machine()
+    processor = platform.processor()
+
+    st.write("### 현재 시스템 정보")
+    st.write(f"**System**: {os_info}")
+    st.write(f"**Node Name**: {node_name}")
+    st.write(f"**Release**: {os_release}")
+    st.write(f"**Version**: {os_version}")
+    st.write(f"**Machine**: {machine}")
+    st.write(f"**Processor**: {processor}")
+
     st.title("_혈당 응답 챗봇_ :books:")
 
     if "conversation" not in st.session_state:
